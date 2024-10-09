@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"log/slog"
 	"os"
 	"time"
 
@@ -14,8 +15,9 @@ import (
 
 var Collection *mongo.Collection
 
-func ConnectToDatabase() (*mongo.Client, error) {
+func ConnectToDatabase() error {
 
+	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 	err := godotenv.Load()
 
 	if err != nil {
@@ -37,20 +39,20 @@ func ConnectToDatabase() (*mongo.Client, error) {
 	client, err := mongo.Connect(context.Background(), clientOptions)
 
 	if err != nil {
-		log.Fatal(err)
-		os.Exit(1)
-		return nil, err
+
+		return err
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	if err := client.Ping(ctx, nil); err != nil {
-		return nil, fmt.Errorf("Failed to ping mongodb: %v", err)
+		logger.Error(fmt.Sprintf("Failed to ping mongodb: %v", err))
+		return err
 	}
 
-	log.Println("Connecting to database...")
+	logger.Error("Connecting to database...")
 	Collection = client.Database("trello").Collection("users")
 
-	return client, nil
+	return nil
 }
