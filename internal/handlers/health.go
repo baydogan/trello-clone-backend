@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"trello-clone-backend/internal/errors"
 	"trello-clone-backend/internal/services"
 )
 
@@ -20,5 +21,11 @@ func NewHealthHandler(c *HealthHandlerConfig) *HealthHandler {
 }
 
 func (h *Handler) HealthCheck(w http.ResponseWriter, r *http.Request) {
-	h.healthService.HealthCheck(w)
+	err := h.healthService.HealthCheck(w)
+
+	if err != nil {
+		// Use error handler to wrap in Envelope
+		errors.ServerErrorResponse(w, r, err)
+		return
+	}
 }

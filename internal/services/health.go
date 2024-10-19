@@ -7,7 +7,7 @@ import (
 )
 
 type HealthService interface {
-	HealthCheck(w http.ResponseWriter)
+	HealthCheck(w http.ResponseWriter) error
 }
 
 type healthService struct {
@@ -24,14 +24,16 @@ func NewHealthService(c *HealthServiceConfig) HealthService {
 	}
 }
 
-func (h *healthService) HealthCheck(w http.ResponseWriter) {
+func (h *healthService) HealthCheck(w http.ResponseWriter) error {
 	err := h.healthRepo.Ping()
 	if err != nil {
-		response := helpers.BuildErrorResponse(500, "Database is down")
-		helpers.WriteJSON(w, 500, response, nil)
-		return
+		return err
 	}
 
-	resp := helpers.BuildSuccessResponse(200, "Health check is ok", "")
-	helpers.WriteJSON(w, 200, resp, nil)
+	response := helpers.Envelope{
+		"message": "Health check is ok",
+	}
+
+	helpers.WriteJSON(w, http.StatusOK, response, nil)
+	return nil
 }
