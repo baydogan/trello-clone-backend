@@ -9,12 +9,11 @@ type User struct {
 	CreatedAt time.Time `json:"created_at"`
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`
-	Password  password  `json:"-"`
+	Password  Password  `json:"-"`
 	Activated bool      `json:"activated"`
 	Version   int       `json:"-"`
 }
 
-type password struct {
-	plaintext *string
-	hash      []byte
+type Password struct {
+	Hash string
 }
