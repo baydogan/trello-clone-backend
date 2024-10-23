@@ -28,11 +28,11 @@ func New(c *HandlerConfig) *Handler {
 func InitAllHandlers() *Handler {
 	client := database.New().GetClient()
 
-	userRepo := r.NewUserRepository(&r.UserRepoConfig{Client: client})
-	userService := s.NewUserService(&s.UserServiceConfig{UserRepository: userRepo})
+	userRepo := r.NewUserRepository((&r.UserRepoConfig{Client: client}))
+	healthRepo := repositories.NewHealthRepository((&r.HealthRepoConfig{Client: client}))
 
-	healthRepo := repositories.NewHealthRepository(&repositories.HealthRepoConfig{Client: client})
-	healthService := services.NewHealthService(&services.HealthServiceConfig{HealthRepository: healthRepo})
+	userService := s.NewUserService(&s.UserServiceConfig{UserRepository: userRepo})
+	healthService := services.NewHealthService(&s.HealthServiceConfig{HealthRepository: healthRepo})
 
 	h := New(&HandlerConfig{
 		UserService:   userService,

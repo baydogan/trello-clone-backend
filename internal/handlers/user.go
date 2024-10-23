@@ -5,9 +5,24 @@ import (
 	"net/http"
 	"trello-clone-backend/internal/errors"
 	"trello-clone-backend/internal/helpers"
+	"trello-clone-backend/internal/services"
 )
 
-func (h *Handler) registerUserHandler(w http.ResponseWriter, r *http.Request) {
+type UserHandler struct {
+	userService services.UserService
+}
+
+type UserHandlerConfig struct {
+	UserService services.UserService
+}
+
+func NewUserHandler(c *UserHandler) *UserHandler {
+	return &UserHandler{
+		userService: c.userService,
+	}
+}
+
+func (h *Handler) RegisterUserHandler(w http.ResponseWriter, r *http.Request) {
 	var input struct {
 		Name     string `json:"name"`
 		Email    string `json:"email"`

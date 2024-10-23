@@ -25,10 +25,12 @@ var (
 )
 
 func New() Service {
-	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(fmt.Sprintf("mongodb://%s:%s", host, port)))
+	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(fmt.Sprintf("mongodb://root:password1234@%s:%s", host, port)))
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println("Connection established")
 	return &service{
 		db: client,
 	}
