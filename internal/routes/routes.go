@@ -13,5 +13,7 @@ func Routes(h *handlers.Handler) *httprouter.Router {
 	router.HandlerFunc(http.MethodGet, "/health", h.HealthCheck)
 	router.HandlerFunc(http.MethodPost, "/register", h.RegisterUserHandler)
 
+	router.HandlerFunc(http.MethodPost, "/tokens/authentication", h.LoginHandler)
+
 	return router
 }

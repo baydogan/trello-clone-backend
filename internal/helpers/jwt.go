@@ -8,7 +8,7 @@ import (
 
 var secretKey = []byte("secret-key")
 
-func GenmerateJwtToken(username string) (string, error) {
+func GenaerateJwtToken(username string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
 			"username": username,
@@ -17,7 +17,7 @@ func GenmerateJwtToken(username string) (string, error) {
 
 	tokenString, err := token.SignedString(secretKey)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	return tokenString, nil
