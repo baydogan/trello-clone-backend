@@ -15,5 +15,7 @@ func Routes(h *handlers.Handler) *httprouter.Router {
 
 	router.HandlerFunc(http.MethodPost, "/tokens/authentication", h.LoginHandler)
 
+	router.HandlerFunc(http.MethodGet, "/profile", h.ProfileHandler)
+
 	return router
 }

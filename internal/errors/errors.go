@@ -56,3 +56,13 @@ func BadRequestResponse(w http.ResponseWriter, r *http.Request, err error) {
 func FailedValidationResponse(w http.ResponseWriter, r *http.Request, err error) {
 	errorResponse(w, r, http.StatusUnprocessableEntity, err)
 }
+
+func UserNotFoundResponse(w http.ResponseWriter, r *http.Request) {
+	message := "the requested user could not be found"
+	errorResponse(w, r, http.StatusNotFound, message)
+}
+
+func UserAlreadyExistsResponse(w http.ResponseWriter, r *http.Request) {
+	message := "the requested email is exists"
+	errorResponse(w, r, http.StatusConflict, message)
+}

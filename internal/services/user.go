@@ -10,9 +10,10 @@ import (
 
 type UserService interface {
 	RegisterUser(ctx context.Context, name, email, password string) error
-	Login(ctx context.Context, username, password string) (*models.User, *string, error)
+	Login(ctx context.Context, email, password string) (*models.User, *string, error)
 	SendActivationEmail(email, token string) error
 	ActivateUserWithToken(ctx context.Context, token string) error
+	GetByEmail(ctx context.Context, email string) (*models.User, error)
 }
 
 type userService struct {
@@ -85,4 +86,8 @@ func (s *userService) ActivateUserWithToken(ctx context.Context, token string) e
 
 	return s.userRepository.SetUserActive(ctx, user.ActivationToken)
 
+}
+
+func (s *userService) GetByEmail(ctx context.Context, email string) (*models.User, error) {
+	return s.userRepository.GetByEmail(ctx, email)
 }

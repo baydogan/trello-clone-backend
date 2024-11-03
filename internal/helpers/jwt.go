@@ -8,11 +8,11 @@ import (
 
 var secretKey = []byte("secret-key")
 
-func GenaerateJwtToken(username string) (string, error) {
+func GenaerateJwtToken(email string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
-			"username": username,
-			"exp":      time.Now().Add(time.Hour * 24).Unix(),
+			"email": email,
+			"exp":   time.Now().Add(time.Hour * 24).Unix(),
 		})
 
 	tokenString, err := token.SignedString(secretKey)
@@ -23,18 +23,18 @@ func GenaerateJwtToken(username string) (string, error) {
 	return tokenString, nil
 }
 
-func verifyToken(tokenString string) error {
+func VerifyToken(tokenString string) (jwt.MapClaims, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return secretKey, nil
 	})
 
 	if err != nil {
-		return err
+		return nil, fmt.Errorf("invalid token: %v", err)
 	}
 
-	if !token.Valid {
-		return fmt.Errorf("invalid token")
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		return claims, nil
+	} else {
+		return nil, fmt.Errorf("invalid token claims")
 	}
-
-	return nil
 }
